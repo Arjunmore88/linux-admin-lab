@@ -162,7 +162,7 @@ main() {
         "${CRITICAL}") label="CRITICAL" ;;
     esac
     if [[ ${#SUMMARY[@]} -eq 0 ]]; then
-        echo "${label} - all checks passed on $(hostname)"
+        echo "${label} - all checks passed on $(uname -n)"
     else
         local joined
         joined="$(printf '%s; ' "${SUMMARY[@]}")"
