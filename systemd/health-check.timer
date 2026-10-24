@@ -1,0 +1,21 @@
+# /etc/systemd/system/health-check.timer
+#
+# Replaces a */5 cron entry. Advantages over cron: runs are logged in the
+# journal with exit status, missed runs are visible with
+# `systemctl list-timers`, and overlapping runs are impossible because a
+# oneshot service cannot be started twice concurrently.
+
+[Unit]
+Description=Run host health check every 5 minutes
+Documentation=https://github.com/Arjunmore88/linux-admin-lab
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+# Spread load across a fleet so 500 hosts do not all check at the same second.
+RandomizedDelaySec=30s
+AccuracySec=15s
+Unit=health-check.service
+
+[Install]
+WantedBy=timers.target

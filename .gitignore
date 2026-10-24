@@ -1,0 +1,17 @@
+# Local test artefacts
+*.partial
+*.tar.gz
+*.tar.gz.sha256
+*.bak.*
+*.log
+
+# Real user data must never be committed - only the sample file is tracked.
+configs/*.csv
+!configs/users.csv
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store

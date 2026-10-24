@@ -1,0 +1,39 @@
+# /etc/logrotate.d/linux-admin-lab
+#
+# Rotation for the lab scripts' own logs and for an example application.
+# Test with:  logrotate -d /etc/logrotate.d/linux-admin-lab   (debug, no changes)
+#             logrotate -f /etc/logrotate.d/linux-admin-lab   (force a rotation)
+
+/var/log/linux-admin-lab/*.log {
+    weekly
+    rotate 8
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 root adm
+    su root adm
+}
+
+# Example: a chatty application that writes its own log file.
+# Size-based rotation is what would have prevented INC-2026-0412
+# (see docs/postmortem-2026-04-var-full.md): daily-only rotation let a
+# debug-level log reach 12 GB before its first rotation.
+# maxsize only takes effect as often as logrotate runs, so this policy
+# assumes logrotate is triggered hourly (logrotate.timer override or cron).
+# With maxsize in place, delaycompress leaves at most one ~500M file
+# uncompressed.
+/var/log/myapp/*.log {
+    daily
+    maxsize 500M
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    # The app keeps its file handle open and does not support SIGHUP reopen,
+    # so copy-then-truncate instead of moving the file.
+    copytruncate
+    dateext
+    dateformat -%Y%m%d-%s
+}

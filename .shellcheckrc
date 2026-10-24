@@ -1,0 +1,3 @@
+# Resolve "source lib/common.sh" relative to each script, wherever shellcheck runs from.
+source-path=SCRIPTDIR
+external-sources=true

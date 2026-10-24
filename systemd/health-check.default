@@ -1,0 +1,7 @@
+# /etc/default/health-check - per-host arguments for health-check.service
+#
+# Ubuntu/Debian example (the SSH unit is "ssh"):
+HEALTH_CHECK_ARGS="--service ssh.service --service cron.service --disk-warn 80 --disk-crit 90"
+#
+# RHEL/Rocky/Alma example (the SSH unit is "sshd"):
+# HEALTH_CHECK_ARGS="--service sshd.service --service crond.service --disk-warn 80 --disk-crit 90"

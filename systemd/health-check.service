@@ -1,0 +1,58 @@
+# /etc/systemd/system/health-check.service
+#
+# Runs the fleet health check once. Triggered by health-check.timer.
+# A WARNING (1) or CRITICAL (2) exit marks the unit "failed", which is
+# visible in `systemctl --failed`, node_exporter's systemd collector, and
+# can fire an OnFailure= alert hook.
+
+[Unit]
+Description=Host health check (disk, memory, load, services)
+Documentation=https://github.com/Arjunmore88/linux-admin-lab
+After=network-online.target
+# Uncomment once an alerting unit exists, e.g. one that posts to Slack/PagerDuty:
+# OnFailure=notify-oncall@%n.service
+
+[Service]
+Type=oneshot
+# Per-host arguments live outside the unit so the unit file is identical fleet-wide.
+# Example: HEALTH_CHECK_ARGS="--service ssh.service --service cron.service --disk-warn 75"
+Environment=HEALTH_CHECK_ARGS=
+EnvironmentFile=-/etc/default/health-check
+ExecStart=/opt/linux-admin-lab/scripts/health-check.sh $HEALTH_CHECK_ARGS
+TimeoutStartSec=60
+
+# --- Sandboxing -------------------------------------------------------------
+# The check is read-only, so it runs as a throwaway unprivileged user with
+# the filesystem mounted read-only and no ability to gain privileges.
+DynamicUser=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+PrivateDevices=yes
+PrivateNetwork=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+# AF_UNIX is required for `systemctl is-active` to talk to systemd over D-Bus.
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+CapabilityBoundingSet=
+AmbientCapabilities=
+UMask=0077
+
+# Keep a misbehaving check from hurting the host it is checking.
+Nice=10
+IOSchedulingClass=idle
+CPUQuota=20%
+MemoryMax=64M

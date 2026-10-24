@@ -1,0 +1,7 @@
+# New-joiner batch for the cloud-ops team. Reviewed in change ticket CHG-1042.
+# Keys below are placeholders - replace with the user's real public key.
+username,full_name,group,ssh_public_key,sudo,expiry
+pnair,Priya Nair,cloudops,ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEXAMPLEKEYpriyaNairCloudOps0000000000 priya@laptop,yes,
+rkulkarni,Rahul Kulkarni,cloudops,ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEXAMPLEKEYrahulKulkarniCloudOps000000 rahul@laptop,yes,
+mdesai,Meera Desai,developers,ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEXAMPLEKEYmeeraDesaiDevelopers00000000 meera@laptop,no,
+acme-support,Acme Support (contractor),vendors,ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEXAMPLEKEYacmeVendorSupport00000000000 acme-support,no,2027-03-31
